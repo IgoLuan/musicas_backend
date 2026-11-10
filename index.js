@@ -57,4 +57,31 @@ app.post("/cadastrar", (request, response) => {
     })
  })
 
+ app.get("/musica/:id", (request, response) => {
+    const { id } = request.params
+    const comandoSelect = "SELECT * FROM musicas_luan WHERE id = ?"
+
+    sql.query(comandoSelect, [id], (error, data) => {
+        if (error) {
+            console.log(error)
+            return response.status(500).json({ erro: "Erro ao buscar música" })
+        }
+        response.json(data[0])
+    })
+  })
+
+  app.put("/editar/:id", (request, response) => {
+    const { id } = request.params
+    const { titulo, artista, genero, ano, duracao } = request.body
+    const comandoUpdate = "UPDATE musicas_luan SET titulo = ?, artista = ?, genero = ?, ano = ?, duracao = ? WHERE id = ?"
+
+    sql.query(comandoUpdate, [titulo, artista, genero, ano, duracao, id], (error) => {
+        if (error) {
+            console.log(error)
+            return response.status(500).json({ erro: "Erro ao editar música" })
+        }
+        response.json({ mensagem: "Música editada com sucesso" })
+    })
+ })
+
 export default app
